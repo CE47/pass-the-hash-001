@@ -1,0 +1,29 @@
+{
+  "name": "Multiple distinct accounts authenticating to one server from a single source",
+  "description": "Lab rule for the CTIA pass-the-hash-001 scenario. One workstation replayed stolen NTLM hashes against one target server and authenticated as several different privileged accounts from the same source address, all logon type 3, inside a few minutes - the shape of a pass-the-hash attack. The query is the same one the investigation uses, so the count the alert reports and the count the analyst finds by hand are the same number. Scoped to the lab workstation and target server on purpose so the result is unambiguous, and left without a threshold so every one of the replayed logons arrives as its own alert. The time window is deliberately long because this lab ships historical data - that is a lab-only concession, not a production setting; a real deployment would use a short window and alert on the shape of the burst rather than on a single workstation.",
+  "type": "query",
+  "risk_score": 99,
+  "severity": "critical",
+  "tags": [
+    "ctia-lab",
+    "ntlm",
+    "pass-the-hash",
+    "credential-access",
+    "lateral-movement",
+    "exfiltration",
+    "detection-engineering"
+  ],
+  "enabled": true,
+  "interval": "1m",
+  "from": "now-365d",
+  "to": "now",
+  "index": [
+    "auth-*"
+  ],
+  "timeField": "@timestamp",
+  "query": "event.code: 4624 and host.name: \"sec-win-03\" and source.ip: \"10.0.4.10\"",
+  "language": "kuery",
+  "max_signals": 100,
+  "actions": [],
+  "notify_when": "onActiveAlert"
+}
